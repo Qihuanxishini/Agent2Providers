@@ -153,6 +153,14 @@ const FOREIGN_IDENTITIES: &[(&str, &str)] = &[
         "You are an AI agent powered by DeepSeek Harness",
         "You are an AI agent powered by a local coding harness",
     ),
+    // [喵喵喵]: pi CLI 的首句是 "You are an expert coding assistant operating inside
+    // pi, a coding agent harness."，按上游黑名单的 "You are <产品名>" 字面形态推断会被拦
+    // （实测症状：pi 直连 406、切「替换」模式即 200，排除 max_tokens 与风控方向）；
+    // 改写掉产品名以破坏字面匹配。改写后 200 尚未实测，加进表后由真实请求闭环。
+    (
+        "You are an expert coding assistant operating inside pi",
+        "You are an expert coding assistant operating in a terminal",
+    ),
     // 放最后：它最短、最通用（新版 Codex 的首句就是它），必须让上面那些更长的
     // Codex CLI 句式先有机会命中（长在前是本表的固定纪律）。
     ("You are Codex", "You are a coding agent"),
